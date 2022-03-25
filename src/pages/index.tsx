@@ -15,13 +15,15 @@ const Home: VFC = () => {
   }
 
   return (
-    <div className='w-[90%] mx-auto'>
+    <div className='mx-auto w-[90%]'>
       <main>
         <body>
-          <section className='p-4 mt-10 w-[300px] mx-auto text-center border-2 border-black rounded-md shadow-xl'>
+          <section className='p-4 mx-auto mt-10 w-[300px] text-center rounded-md border-2 border-black shadow-xl'>
             <ul className='flex flex-col-reverse'>
               {wordList.map((word, i) => (
-                <li>{index < i && i < index + 9 && <li key={i}>{word}</li>}</li>
+                <li key={i}>
+                  {index < i && i < index + 9 && <li key={i}>{word}</li>}
+                </li>
               ))}
             </ul>
 
@@ -29,6 +31,7 @@ const Home: VFC = () => {
               <div className={`text-xl`}>
                 {wordList[index].split('').map((v, i) => (
                   <span
+                    key={i}
                     className={`${
                       text.length > i &&
                       wordList[index].split('')[i] != text.split('')[i] &&
