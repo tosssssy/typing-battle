@@ -1,25 +1,11 @@
 import React, { useEffect, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
+import { useTimer } from 'hooks/useTimer'
 
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
-  const [count, setCount] = useState(0)
-  const [timer, setTimer] = useState(false)
-
-  const countup = () => {
-    setCount((count) => count + 1)
-  }
-
-  useEffect(() => {
-    if (count > 59) {
-      setTimer(false)
-    }
-    if (timer) {
-      const timerId = setInterval(countup, 1000)
-      return () => clearInterval(timerId)
-    }
-  }, [timer, count])
+  const { setTimer, count } = useTimer()
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
