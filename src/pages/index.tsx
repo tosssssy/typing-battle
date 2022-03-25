@@ -12,14 +12,18 @@ const Home: VFC = () => {
   }
 
   useEffect(() => {
+    if (count > 59) {
+      setTimer(false)
+    }
     if (timer) {
       const timerId = setInterval(countup, 1000)
       return () => clearInterval(timerId)
     }
-  }, [timer])
+  }, [timer, count])
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
+    setTimer(true)
     if (wordList[index] == text) {
       wordList[index] = wordList[index + 1]
       setIndex(index + 1)
@@ -58,17 +62,14 @@ const Home: VFC = () => {
                 autoFocus
                 value={text}
                 onChange={checkWord}
+                disabled={count > 59}
               />
             </div>
           </section>
 
           <div className='text-[50px] font-serif text-center'>{index}</div>
           <div>
-            <h2>My Timer</h2>
             <div>{String(count)}</div>
-            <button onClick={() => setTimer(true)}>スタート</button>
-            <button onClick={() => setTimer(false)}>ストップ</button>
-            <button onClick={() => setCount(0)}>リセット</button>
           </div>
         </body>
       </main>
