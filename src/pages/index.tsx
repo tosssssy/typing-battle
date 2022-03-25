@@ -1,12 +1,15 @@
-import React, { useState, VFC } from 'react'
+import React, { useEffect, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
+import { useTimer } from 'hooks/useTimer'
 
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
+  const { setTimer, count } = useTimer()
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
+    setTimer(true)
     if (wordList[index] == text) {
       wordList[index] = wordList[index + 1]
       setIndex(index + 1)
@@ -45,9 +48,15 @@ const Home: VFC = () => {
                 autoFocus
                 value={text}
                 onChange={checkWord}
+                disabled={count > 59}
               />
             </div>
           </section>
+
+          <div className='text-[50px] font-serif text-center'>{index}</div>
+          <div>
+            <div>{String(count)}</div>
+          </div>
         </body>
       </main>
     </div>
