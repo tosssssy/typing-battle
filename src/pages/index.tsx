@@ -1,9 +1,22 @@
-import React, { useState, VFC } from 'react'
+import React, { useEffect, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
 
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
+  const [count, setCount] = useState(0)
+  const [timer, setTimer] = useState(false)
+
+  const countup = () => {
+    setCount((count) => count + 1)
+  }
+
+  useEffect(() => {
+    if (timer) {
+      const timerId = setInterval(countup, 1000)
+      return () => clearInterval(timerId)
+    }
+  }, [timer])
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
@@ -48,6 +61,15 @@ const Home: VFC = () => {
               />
             </div>
           </section>
+
+          <div className='text-[50px] font-serif text-center'>{index}</div>
+          <div>
+            <h2>My Timer</h2>
+            <div>{String(count)}</div>
+            <button onClick={() => setTimer(true)}>スタート</button>
+            <button onClick={() => setTimer(false)}>ストップ</button>
+            <button onClick={() => setCount(0)}>リセット</button>
+          </div>
         </body>
       </main>
     </div>
