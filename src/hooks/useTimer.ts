@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react'
 import { wordList } from 'dev/wordList'
-import { useEffect, useState, VFC } from 'react'
 
 export const useTimer = () => {
   const [count, setCount] = useState(0)
@@ -28,6 +28,7 @@ export const useTimer = () => {
   }, [timer, count])
 
   return {
+    timer,
     setTimer,
     count,
     words,
