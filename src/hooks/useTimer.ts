@@ -9,12 +9,12 @@ interface wordData {
 export const useTimer = () => {
   const [count, setCount] = useState<number>(0)
   const [timer, setTimer] = useState<boolean>(false)
-  // const [words, setWords] = useState<string[]>(['start'])
-  // const [words2, setWords2] = useState<string[]>(['start'])
   const [words, setWords] = useState<wordData[]>([
     { value: 'start', enemy: false },
   ])
-  const [words2, setWords2] = useState<string[]>(['start'])
+  const [words2, setWords2] = useState<wordData[]>([
+    { value: 'start', enemy: false },
+  ])
 
   // 単語をランダムに
   const shuffleArray = useCallback((array: string[]) => {
@@ -38,15 +38,15 @@ export const useTimer = () => {
   }, [])
 
   const addTodo = useCallback(
-    (word: string) => {
-      const newWords = [...words, { value: word, enemy: false }]
+    (word: string, enemy: boolean) => {
+      const newWords = [...words, { value: word, enemy: enemy }]
       setWords(newWords)
     },
     [words]
   )
   const addTodo2 = useCallback(
-    (word: string) => {
-      const newWords = [...words2, word]
+    (word: string, enemy: boolean) => {
+      const newWords = [...words2, { value: word, enemy: enemy }]
       setWords2(newWords)
     },
     [words2]
@@ -55,8 +55,8 @@ export const useTimer = () => {
   useEffect(() => {
     // 2秒毎にwordsに単語を追加
     if (count != 0 && count % 2 == 0) {
-      addTodo(shuffleWords[count / 2])
-      addTodo2(shuffleWords2[count / 2])
+      addTodo(shuffleWords[count / 2], false)
+      addTodo2(shuffleWords2[count / 2], false)
     }
     if (count > 59) setTimer(false)
     if (timer) {

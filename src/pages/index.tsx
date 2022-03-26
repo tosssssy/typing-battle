@@ -25,17 +25,17 @@ const Home: VFC = () => {
   )
 
   useEffect(() => {
-    if (words[index].value == text) {
+    if (words[index] && text === words[index].value) {
       setText('')
       words[index] = words[index + 1]
       setIndex(index + 1)
     }
-    if (words2[index2] == text2) {
+    if (words2[index2] && text2 === words2[index2].value) {
       setText2('')
       words2[index2] = words2[index2 + 1]
       setIndex2(index2 + 1)
     }
-  }, [text, text2])
+  }, [text, text2, index, index2, words, words2])
 
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px]'>
@@ -98,9 +98,13 @@ const Home: VFC = () => {
             <div>
               <div className='p-4 mx-auto mt-10 w-[300px] text-lg text-center rounded-md border-2 border-black shadow-xl'>
                 <ul className='flex flex-col-reverse h-[250px]'>
-                  <li className='text-2xl'>{words2[index2 + 1]}</li>
+                  <li className='text-2xl'>
+                    {words2[index2 + 1] && words2[index2 + 1].value}
+                  </li>
                   {words2.map((word, i) => (
-                    <li key={i}>{index2 + 1 < i && i < index2 + 9 && word}</li>
+                    <li key={i}>
+                      {index2 + 1 < i && i < index2 + 9 && word.value}
+                    </li>
                   ))}
                 </ul>
 
@@ -108,12 +112,13 @@ const Home: VFC = () => {
                 <div className='text-center'>
                   <div className='h-[40px] text-3xl'>
                     {words2[index2] &&
-                      words2[index2].split('').map((v, i) => (
+                      words2[index2].value.split('').map((v, i) => (
                         <span
                           key={i}
                           className={`${
                             text2.length > i &&
-                            words2[index2].split('')[i] != text2.split('')[i] &&
+                            words2[index2].value.split('')[i] !=
+                              text2.split('')[i] &&
                             'text-red-500'
                           }`}
                         >
