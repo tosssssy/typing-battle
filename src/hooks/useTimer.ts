@@ -1,35 +1,21 @@
-import { wordList } from 'dev/wordList'
-import { useEffect, useState, VFC } from 'react'
+import { useEffect, useState } from 'react'
 
-export const useTimer = () => {
+export const useTimer = (endSecond: number) => {
   const [count, setCount] = useState(0)
   const [timer, setTimer] = useState(false)
-  const [words, setWords] = useState(['start', wordList[0]])
 
-  const countup = () => {
-    setCount((count) => count + 1)
-  }
-
-  const addTodo = (word: string) => {
-    const newTodo = [...words, word]
-    setWords(newTodo)
-  }
-
-  // 2秒毎にwordListから、wordsに単語を追加
   useEffect(() => {
-    if (count != 0 && count % 2 == 0) addTodo(wordList[count / 2])
-    if (count > 59) {
+    if (count >= endSecond) {
       setTimer(false)
     }
     if (timer) {
-      const timerId = setInterval(countup, 1000)
+      const timerId = setInterval(() => setCount((count) => count + 1), 1000)
       return () => clearInterval(timerId)
     }
-  }, [timer, count])
+  }, [timer, count, endSecond])
 
   return {
     setTimer,
     count,
-    words,
   }
 }

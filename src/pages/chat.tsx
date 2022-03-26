@@ -10,7 +10,8 @@ import {
   orderBy,
 } from 'firebase/firestore'
 import { NextPage } from 'next'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
 import Link from 'next/link'
 
@@ -18,6 +19,7 @@ const ChatPage: NextPage = () => {
   const [data, setData] = useState<DocumentData[]>()
   const [formParams, setFormParams] =
     useState<{ value: string; userName: string }>()
+  const reference = useMemo(() => collection(db, 'rooms'), [])
 
   useEffect(() => {
     setFormParams({
@@ -27,27 +29,27 @@ const ChatPage: NextPage = () => {
   }, [])
 
   const postComments = useCallback(async () => {
-    const querySnapshot = await getDocs(collection(db, 'rooms'))
+    const querySnapshot = await getDocs(reference)
     setData(querySnapshot.docs.map((doc) => doc.data()))
-  }, [])
+  }, [reference])
   useEffect(() => {
     postComments()
   }, [postComments])
 
   useEffect(() => {
-    const q = query(collection(db, 'rooms'), orderBy('createdAt', 'asc'))
+    const q = query(reference, orderBy('createdAt', 'asc'))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setData(querySnapshot.docs.map((doc) => doc.data()))
     })
     return unsubscribe
-  }, [])
+  }, [reference])
 
   const onSubmit = useCallback(async () => {
     if (!formParams || !formParams.userName || !formParams.value) {
       return
     }
     try {
-      const docRef = await addDoc(collection(db, 'rooms'), {
+      const docRef = await addDoc(reference, {
         value: formParams?.value || '',
         userName: formParams?.userName || '',
         createdAt: new Date(),
@@ -60,7 +62,9 @@ const ChatPage: NextPage = () => {
     } catch (e) {
       console.error('Error adding document: ', e)
     }
-  }, [formParams])
+  }, [formParams, reference])
+
+  const { start } = useWordSendingBot(reference, 'toshiki', 60)
 
   return (
     <>
