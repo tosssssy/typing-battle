@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react'
 
-export const useTimer = () => {
+export const useTimer = (endSecond: number) => {
   const [count, setCount] = useState(0)
   const [timer, setTimer] = useState(false)
 
-  const countup = () => {
-    setCount((count) => count + 1)
-  }
-
   useEffect(() => {
-    if (count > 59) {
+    if (count >= endSecond) {
       setTimer(false)
     }
     if (timer) {
-      const timerId = setInterval(countup, 1000)
+      const timerId = setInterval(() => setCount((count) => count + 1), 1000)
       return () => clearInterval(timerId)
     }
-  }, [timer, count])
+  }, [timer, count, endSecond])
 
   return {
     setTimer,
