@@ -1,22 +1,24 @@
+import Link from 'next/link'
 import React, { useEffect, useState, VFC } from 'react'
 import { useTimer } from 'hooks/useTimer'
-import { wordList } from 'dev/wordList'
-import Link from 'next/link'
 
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
-  const { setTimer, count, words } = useTimer()
+  const { timer, setTimer, count, words } = useTimer()
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!timer) setTimer(true)
     setText(e.target.value)
-    setTimer(true)
+  }
+
+  useEffect(() => {
     if (words[index] == text) {
+      setText('')
       words[index] = words[index + 1]
       setIndex(index + 1)
-      setText('')
     }
-  }
+  }, [text])
 
   return (
     <div className='mx-auto w-[90%]'>
@@ -27,14 +29,13 @@ const Home: VFC = () => {
       <main>
         <body>
           <section className='p-4 mx-auto mt-10 w-[300px] text-center rounded-md border-2 border-black shadow-xl'>
-            <ul className='h-[250px] flex flex-col-reverse'>
+            <ul className='flex flex-col-reverse h-[250px]'>
               {words.map((word, i) => (
-                <li key={i}>
-                  {index < i && i < index + 9 && <li key={i}>{word}</li>}
-                </li>
+                <li key={i}>{index < i && i < index + 9 && word}</li>
               ))}
             </ul>
 
+            {/* 入力する単語 */}
             <div className='mt-10 text-center'>
               <div className='h-[40px] text-2xl'>
                 {words[index] &&
@@ -51,7 +52,7 @@ const Home: VFC = () => {
                     </span>
                   ))}
               </div>
-              {/* 60秒、配列が最後尾になったら止める */}
+
               <input
                 type='text'
                 className='border-2 border-black'
@@ -63,7 +64,7 @@ const Home: VFC = () => {
             </div>
           </section>
 
-          <div className='text-[50px] font-serif text-center'>{index}</div>
+          <div className='font-serif text-[50px] text-center'>{index}</div>
         </body>
       </main>
     </div>

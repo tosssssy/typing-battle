@@ -10,9 +10,9 @@ import {
   orderBy,
 } from 'firebase/firestore'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { db } from 'libs/firebase'
-import Link from 'next/link'
 
 const ChatPage: NextPage = () => {
   const [data, setData] = useState<DocumentData[]>()
