@@ -71,5 +71,7 @@ export const useTimer = () => {
     count,
     words,
     words2,
+    addTodo,
+    addTodo2,
   }
 }

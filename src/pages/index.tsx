@@ -7,16 +7,18 @@ const Home: VFC = () => {
   const [text2, setText2] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
   const [index2, setIndex2] = useState<number>(0)
-  const { timer, setTimer, count, words, words2 } = useTimer()
+  const { timer, setTimer, count, words, words2, addTodo, addTodo2 } =
+    useTimer()
 
-  const checkWord = useCallback(
+  const changeText = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!timer) setTimer(true)
       setText(e.target.value)
     },
     [timer, setTimer]
   )
-  const checkWord2 = useCallback(
+
+  const ChangeText2 = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!timer) setTimer(true)
       setText2(e.target.value)
@@ -27,15 +29,23 @@ const Home: VFC = () => {
   useEffect(() => {
     if (words[index] && text === words[index].value) {
       setText('')
+      // 相手から送られた単語出ないなら、相手に送る
+      if (words[index].enemy == false) {
+        addTodo2(words[index].value, true)
+      }
       words[index] = words[index + 1]
       setIndex(index + 1)
     }
+
     if (words2[index2] && text2 === words2[index2].value) {
       setText2('')
+      if (words2[index2].enemy == false) {
+        addTodo(words2[index2].value, true)
+      }
       words2[index2] = words2[index2 + 1]
       setIndex2(index2 + 1)
     }
-  }, [text, text2, index, index2, words, words2])
+  }, [text, text2])
 
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px]'>
@@ -84,7 +94,7 @@ const Home: VFC = () => {
                     className='my-2 text-xl border-2 border-black'
                     autoFocus
                     value={text}
-                    onChange={checkWord}
+                    onChange={changeText}
                     disabled={count > 59}
                   />
                 </div>
@@ -131,7 +141,7 @@ const Home: VFC = () => {
                     className='my-2 text-xl border-2 border-black'
                     autoFocus
                     value={text2}
-                    onChange={checkWord2}
+                    onChange={ChangeText2}
                     disabled={count > 59}
                   />
                 </div>
