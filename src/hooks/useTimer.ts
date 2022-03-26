@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { wordList } from 'dev/wordList'
 
 export const useTimer = () => {
@@ -6,7 +6,7 @@ export const useTimer = () => {
   const [timer, setTimer] = useState<boolean>(false)
   const [words, setWords] = useState<string[]>(['start'])
 
-  const shuffleArray = (array: string[]) => {
+  const shuffleArray = useCallback((array: string[]) => {
     const cloneArray = [...array]
 
     for (let i = cloneArray.length - 1; i >= 0; i--) {
@@ -17,18 +17,21 @@ export const useTimer = () => {
     }
 
     return cloneArray
-  }
+  }, [])
 
   const shuffleWords = shuffleArray(wordList)
 
-  const countup = () => {
+  const countup = useCallback(() => {
     setCount((count) => count + 1)
-  }
+  }, [])
 
-  const addTodo = (word: string) => {
-    const newTodo = [...words, word]
-    setWords(newTodo)
-  }
+  const addTodo = useCallback(
+    (word: string) => {
+      const newTodo = [...words, word]
+      setWords(newTodo)
+    },
+    [words]
+  )
 
   useEffect(() => {
     // 2秒毎にwordsに単語を追加
