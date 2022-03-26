@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react'
 import { useTimer } from 'hooks/useTimer'
+import { wordList } from 'dev/wordList'
 import Link from 'next/link'
 
 const Home: VFC = () => {

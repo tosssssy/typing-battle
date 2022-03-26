@@ -4,7 +4,7 @@ import { useEffect, useState, VFC } from 'react'
 export const useTimer = () => {
   const [count, setCount] = useState(0)
   const [timer, setTimer] = useState(false)
-  const [words, setWords] = useState(['start'])
+  const [words, setWords] = useState(['start', wordList[0]])
 
   const countup = () => {
     setCount((count) => count + 1)
@@ -17,7 +17,7 @@ export const useTimer = () => {
 
   // 2秒毎にwordListから、wordsに単語を追加
   useEffect(() => {
-    if (count != 0 && count % 2 == 0) addTodo(wordList[count])
+    if (count != 0 && count % 2 == 0) addTodo(wordList[count / 2])
     if (count > 59) {
       setTimer(false)
     }
