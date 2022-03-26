@@ -1,11 +1,12 @@
 import React, { useEffect, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
+import Link from 'next/link'
 
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [index, setIndex] = useState<number>(0)
-  const { setTimer, count } = useTimer()
+  const { setTimer, count, words } = useTimer()
 
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
@@ -19,6 +20,9 @@ const Home: VFC = () => {
 
   return (
     <div className='mx-auto w-[90%]'>
+      <header>
+        <Link href='chat'>chat</Link>
+      </header>
       <main>
         <body>
           <section className='p-4 mx-auto mt-10 w-[300px] text-center rounded-md border-2 border-black shadow-xl'>
@@ -59,6 +63,11 @@ const Home: VFC = () => {
           <div className='text-[50px] font-serif text-center'>{index}</div>
           <div>
             <div>{String(count)}</div>
+            <ul>
+              {words.map((word, i) => (
+                <li key={i}>{word}</li>
+              ))}
+            </ul>
           </div>
         </body>
       </main>
