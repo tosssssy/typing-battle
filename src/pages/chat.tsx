@@ -13,6 +13,7 @@ import { NextPage } from 'next'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
+import Link from 'next/link'
 
 const ChatPage: NextPage = () => {
   const [data, setData] = useState<DocumentData[]>()
@@ -67,6 +68,9 @@ const ChatPage: NextPage = () => {
 
   return (
     <>
+      <header>
+        <Link href='/'>typing</Link>
+      </header>
       <div className='mx-8 mb-60'>
         {data &&
           data.map((field, index) => {
