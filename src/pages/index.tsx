@@ -1,5 +1,4 @@
 import React, { useEffect, useState, VFC } from 'react'
-import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
 import Link from 'next/link'
 
@@ -11,8 +10,8 @@ const Home: VFC = () => {
   const checkWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
     setTimer(true)
-    if (wordList[index] == text) {
-      wordList[index] = wordList[index + 1]
+    if (words[index] == text) {
+      words[index] = words[index + 1]
       setIndex(index + 1)
       setText('')
     }
@@ -20,14 +19,15 @@ const Home: VFC = () => {
 
   return (
     <div className='mx-auto w-[90%]'>
-      <header>
+      <header className='flex justify-between'>
+        <div className=''>{'Timer ' + (60 - count)}</div>
         <Link href='chat'>chat</Link>
       </header>
       <main>
         <body>
           <section className='p-4 mx-auto mt-10 w-[300px] text-center rounded-md border-2 border-black shadow-xl'>
-            <ul className='flex flex-col-reverse'>
-              {wordList.map((word, i) => (
+            <ul className='h-[250px] flex flex-col-reverse'>
+              {words.map((word, i) => (
                 <li key={i}>
                   {index < i && i < index + 9 && <li key={i}>{word}</li>}
                 </li>
@@ -35,20 +35,22 @@ const Home: VFC = () => {
             </ul>
 
             <div className='mt-10 text-center'>
-              <div className={`text-xl`}>
-                {wordList[index].split('').map((v, i) => (
-                  <span
-                    key={i}
-                    className={`${
-                      text.length > i &&
-                      wordList[index].split('')[i] != text.split('')[i] &&
-                      'text-red-500'
-                    }`}
-                  >
-                    {v}
-                  </span>
-                ))}
+              <div className='h-[40px] text-2xl'>
+                {words[index] &&
+                  words[index].split('').map((v, i) => (
+                    <span
+                      key={i}
+                      className={`${
+                        text.length > i &&
+                        words[index].split('')[i] != text.split('')[i] &&
+                        'text-red-500'
+                      }`}
+                    >
+                      {v}
+                    </span>
+                  ))}
               </div>
+              {/* 60秒、配列が最後尾になったら止める */}
               <input
                 type='text'
                 className='border-2 border-black'
@@ -61,14 +63,6 @@ const Home: VFC = () => {
           </section>
 
           <div className='text-[50px] font-serif text-center'>{index}</div>
-          <div>
-            <div>{String(count)}</div>
-            <ul>
-              {words.map((word, i) => (
-                <li key={i}>{word}</li>
-              ))}
-            </ul>
-          </div>
         </body>
       </main>
     </div>
