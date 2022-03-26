@@ -25,7 +25,7 @@ const Home: VFC = () => {
   )
 
   useEffect(() => {
-    if (words[index] == text) {
+    if (words[index].value == text) {
       setText('')
       words[index] = words[index + 1]
       setIndex(index + 1)
@@ -50,9 +50,13 @@ const Home: VFC = () => {
             <div>
               <div className='p-4 mx-auto mt-10 w-[300px] text-lg text-center rounded-md border-2 border-black shadow-xl'>
                 <ul className='flex flex-col-reverse h-[250px]'>
-                  <li className='text-2xl'>{words[index + 1]}</li>
+                  <li className='text-2xl'>
+                    {words[index + 1] && words[index + 1].value}
+                  </li>
                   {words.map((word, i) => (
-                    <li key={i}>{index + 1 < i && i < index + 9 && word}</li>
+                    <li key={i}>
+                      {index + 1 < i && i < index + 9 && word.value}
+                    </li>
                   ))}
                 </ul>
 
@@ -60,12 +64,13 @@ const Home: VFC = () => {
                 <div className='text-center'>
                   <div className='h-[40px] text-3xl'>
                     {words[index] &&
-                      words[index].split('').map((v, i) => (
+                      words[index].value.split('').map((v, i) => (
                         <span
                           key={i}
                           className={`${
                             text.length > i &&
-                            words[index].split('')[i] != text.split('')[i] &&
+                            words[index].value.split('')[i] !=
+                              text.split('')[i] &&
                             'text-red-500'
                           }`}
                         >

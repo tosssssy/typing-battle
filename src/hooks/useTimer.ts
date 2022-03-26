@@ -1,12 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
 import { wordList } from 'dev/wordList'
 
+interface wordData {
+  value: string
+  enemy: boolean
+}
+
 export const useTimer = () => {
   const [count, setCount] = useState<number>(0)
   const [timer, setTimer] = useState<boolean>(false)
-  const [words, setWords] = useState<string[]>(['start'])
+  // const [words, setWords] = useState<string[]>(['start'])
+  // const [words2, setWords2] = useState<string[]>(['start'])
+  const [words, setWords] = useState<wordData[]>([
+    { value: 'start', enemy: false },
+  ])
   const [words2, setWords2] = useState<string[]>(['start'])
 
+  // 単語をランダムに
   const shuffleArray = useCallback((array: string[]) => {
     const cloneArray = [...array]
 
@@ -29,15 +39,15 @@ export const useTimer = () => {
 
   const addTodo = useCallback(
     (word: string) => {
-      const newTodo = [...words, word]
-      setWords(newTodo)
+      const newWords = [...words, { value: word, enemy: false }]
+      setWords(newWords)
     },
     [words]
   )
   const addTodo2 = useCallback(
     (word: string) => {
-      const newTodo = [...words2, word]
-      setWords2(newTodo)
+      const newWords = [...words2, word]
+      setWords2(newWords)
     },
     [words2]
   )
