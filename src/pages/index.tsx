@@ -1,10 +1,19 @@
+import { useAtom } from 'jotai'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useMemo, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
+import {
+  enemyIndextAtom,
+  enemyTextAtom,
+  enemyWordsAtom,
+  indextAtom,
+  textAtom,
+  wordsAtom,
+} from 'libs/Atom'
 import { shuffleArray } from 'utils/shuffleArray'
 
-const PLAYING_TIME = 10
+const PLAYING_TIME = 20
 
 interface wordData {
   value: string
@@ -12,12 +21,18 @@ interface wordData {
 }
 
 const Home: VFC = () => {
-  const [text, setText] = useState<string>('')
-  const [enemyText, setEnemyText] = useState<string>('')
-  const [index, setIndex] = useState<number>(0)
-  const [enemyIndex, setEnemyIndex] = useState<number>(0)
-  const [words, setWords] = useState<wordData[]>()
-  const [enemyWords, setEnemyWords] = useState<wordData[]>()
+  // const [text, setText] = useState<string>('')
+  // const [enemyText, setEnemyText] = useState<string>('')
+  // const [index, setIndex] = useState<number>(0)
+  // const [enemyIndex, setEnemyIndex] = useState<number>(0)
+  // const [words, setWords] = useState<wordData[]>()
+  // const [enemyWords, setEnemyWords] = useState<wordData[]>()
+  const [text, setText] = useAtom(textAtom)
+  const [enemyText, setEnemyText] = useAtom(enemyTextAtom)
+  const [index, setIndex] = useAtom(indextAtom)
+  const [enemyIndex, setEnemyIndex] = useAtom(enemyIndextAtom)
+  const [words, setWords] = useAtom(wordsAtom)
+  const [enemyWords, setEnemyWords] = useAtom(enemyWordsAtom)
 
   useEffect(() => {
     setWords([{ value: 'start', enemy: false }])
@@ -54,8 +69,15 @@ const Home: VFC = () => {
       addWord(displayWords[count / 2], false)
       addEnemyWord(displayEnemyWords[count / 2], false)
     }
+
+    // 別ページにデータを送る方法
+    // useContext, Redux Toolkit, jotai
+    // session, react Router, post method?
     if (count >= PLAYING_TIME) {
-      window.location.href = '/result'
+      // sessionStorage.setItem('index', String(index))
+      // sessionStorage.setItem('enemyIndex', String(enemyIndex))
+      // window.location.href = '/result'
+      window.location.replace('/result')
     }
     // addWord, addEnemyWordを入れると無限ループするため
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,6 +138,8 @@ const Home: VFC = () => {
     index,
     text,
     words,
+    setIndex,
+    setEnemyIndex,
   ])
 
   return (
@@ -124,9 +148,14 @@ const Home: VFC = () => {
         <div className='font-serif text-3xl'>
           {'Timer : ' + (PLAYING_TIME - count)}
         </div>
-        <Link href='chat'>
-          <a>chat</a>
-        </Link>
+        <div className='flex gap-2'>
+          <Link href='/chat'>
+            <a>chat</a>
+          </Link>
+          <Link href='/result'>
+            <a>result</a>
+          </Link>
+        </div>
       </header>
 
       <main>
