@@ -4,9 +4,11 @@ import { VFC } from 'react'
 import {
   enemyIndextAtom,
   enemyTextAtom,
+  enemyWordsArrayAtom,
   enemyWordsAtom,
   indextAtom,
   textAtom,
+  wordsArrayAtom,
   wordsAtom,
 } from 'libs/Atom'
 const Result: VFC = () => {
@@ -33,13 +35,16 @@ const Result: VFC = () => {
   const [enemyIndex] = useAtom(enemyIndextAtom)
   const [words] = useAtom(wordsAtom)
   const [enemyWords] = useAtom(enemyWordsAtom)
+
+  const [wordsArray] = useAtom(wordsArrayAtom)
+  const [enemyWordsArray] = useAtom(enemyWordsArrayAtom)
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px] text-xl'>
       <Link href='/'>
         <a>typing</a>
       </Link>
       <div className='mt-10'>
-        <div className='flex gap-4'>
+        <div className='flex gap-36'>
           <div>{'myIndex: ' + index + text}</div>
           <div>{'enemyIndex: ' + enemyIndex + enemyText}</div>
         </div>
@@ -59,7 +64,7 @@ const Result: VFC = () => {
               {/* <div>{words[0].value}</div>
               <div>{enemyWords[0].value}</div> */}
               <div className='flex gap-4'>
-                <ul>
+                {/* <ul>
                   {words.map((v, i) => (
                     <li key={i}>{v.value}</li>
                   ))}
@@ -67,6 +72,33 @@ const Result: VFC = () => {
                 <ul>
                   {enemyWords.map((v, i) => (
                     <li key={i}>{v.value}</li>
+                  ))}
+                </ul> */}
+
+                <ul>
+                  <li className='mb-2'>全ての単語</li>
+                  {wordsArray.map((v, i) => (
+                    <li key={i}>{v}</li>
+                  ))}
+                </ul>
+
+                <ul>
+                  <li className='mb-2'>打った単語</li>
+                  {wordsArray.map((v, i) => (
+                    <li key={i}>{i < index && v}</li>
+                  ))}
+                </ul>
+                <ul>
+                  <li className='mb-2'>敵の全ての単語</li>
+                  {enemyWordsArray.map((v, i) => (
+                    <li key={i}>{v}</li>
+                  ))}
+                </ul>
+
+                <ul>
+                  <li className='mb-2'>敵の打った単語</li>
+                  {enemyWordsArray.map((v, i) => (
+                    <li key={i}>{i < enemyIndex && v}</li>
                   ))}
                 </ul>
               </div>

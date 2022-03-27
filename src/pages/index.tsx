@@ -6,9 +6,11 @@ import { useTimer } from 'hooks/useTimer'
 import {
   enemyIndextAtom,
   enemyTextAtom,
+  enemyWordsArrayAtom,
   enemyWordsAtom,
   indextAtom,
   textAtom,
+  wordsArrayAtom,
   wordsAtom,
 } from 'libs/Atom'
 import { shuffleArray } from 'utils/shuffleArray'
@@ -34,6 +36,9 @@ const Home: VFC = () => {
   const [words, setWords] = useAtom(wordsAtom)
   const [enemyWords, setEnemyWords] = useAtom(enemyWordsAtom)
 
+  const [wordsArray, setWordsArray] = useAtom(wordsArrayAtom)
+  const [enemyWordsArray, setEnemyWordsArray] = useAtom(enemyWordsArrayAtom)
+
   useEffect(() => {
     setWords([{ value: 'start', enemy: false }])
     setEnemyWords([{ value: 'start', enemy: false }])
@@ -50,6 +55,9 @@ const Home: VFC = () => {
       if (!words) return
       const newWords = [...words, { value: word, enemy: enemy }]
       setWords(newWords)
+
+      const newWordsArray = [...wordsArray, word]
+      setWordsArray(newWordsArray)
       console.log('add!!!')
     },
     [words]
@@ -59,6 +67,9 @@ const Home: VFC = () => {
       if (!enemyWords) return
       const newWords = [...enemyWords, { value: word, enemy: enemy }]
       setEnemyWords(newWords)
+
+      const newWordsArray = [...enemyWordsArray, word]
+      setEnemyWordsArray(newWordsArray)
     },
     [enemyWords]
   )

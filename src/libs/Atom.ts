@@ -19,3 +19,6 @@ export const enemyWordsAtom = atom<word[]>([])
 //   { value: 'anpan', enemy: false },
 //   { value: 'start', enemy: false },
 // ])
+
+export const wordsArrayAtom = atom<string[]>([])
+export const enemyWordsArrayAtom = atom<string[]>([])
