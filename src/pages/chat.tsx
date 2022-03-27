@@ -10,15 +10,17 @@ import {
   orderBy,
 } from 'firebase/firestore'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
-import Link from 'next/link'
 
 const ChatPage: NextPage = () => {
   const [data, setData] = useState<DocumentData[]>()
-  const [formParams, setFormParams] =
-    useState<{ value: string; userName: string }>()
+  const [formParams, setFormParams] = useState<{
+    value: string
+    userName: string
+  }>()
   const reference = useMemo(() => collection(db, 'rooms'), [])
 
   useEffect(() => {
@@ -69,7 +71,9 @@ const ChatPage: NextPage = () => {
   return (
     <>
       <header>
-        <Link href='/'>typing</Link>
+        <Link href='/'>
+          <a>typing</a>
+        </Link>
       </header>
       <div className='mx-8 mb-60'>
         {data &&
