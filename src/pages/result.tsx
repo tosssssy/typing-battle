@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { VFC } from 'react'
-export const Result: VFC = () => {
+const Result: VFC = () => {
   return (
     <>
       <Link href='index'>
@@ -10,3 +10,5 @@ export const Result: VFC = () => {
     </>
   )
 }
+
+export default Result

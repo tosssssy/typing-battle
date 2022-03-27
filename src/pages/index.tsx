@@ -4,7 +4,7 @@ import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
 import { shuffleArray } from 'utils/shuffleArray'
 
-const PLAYING_TIME = 60
+const PLAYING_TIME = 10
 
 interface wordData {
   value: string
@@ -18,10 +18,12 @@ const Home: VFC = () => {
   const [enemyIndex, setEnemyIndex] = useState<number>(0)
   const [words, setWords] = useState<wordData[]>()
   const [enemyWords, setEnemyWords] = useState<wordData[]>()
+
   useEffect(() => {
     setWords([{ value: 'start', enemy: false }])
     setEnemyWords([{ value: 'start', enemy: false }])
   }, [])
+
   const { setTimer, count } = useTimer(PLAYING_TIME)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -51,6 +53,9 @@ const Home: VFC = () => {
     if (count != 0 && count % 2 == 0) {
       addWord(displayWords[count / 2], false)
       addEnemyWord(displayEnemyWords[count / 2], false)
+    }
+    if (count >= PLAYING_TIME) {
+      window.location.href = '/result'
     }
     // addWord, addEnemyWordを入れると無限ループするため
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,7 +121,9 @@ const Home: VFC = () => {
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px]'>
       <header className='flex justify-between'>
-        <div className='font-serif text-3xl'>{'Timer : ' + (60 - count)}</div>
+        <div className='font-serif text-3xl'>
+          {'Timer : ' + (PLAYING_TIME - count)}
+        </div>
         <Link href='chat'>
           <a>chat</a>
         </Link>
