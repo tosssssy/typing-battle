@@ -1,17 +1,17 @@
 import { useAtom } from 'jotai'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { VFC } from 'react'
 import {
   enemyIndextAtom,
-  enemyTextAtom,
   enemyWordsArrayAtom,
   enemyWordsAtom,
   indextAtom,
-  textAtom,
   wordsArrayAtom,
   wordsAtom,
 } from 'libs/Atom'
 const Result: VFC = () => {
+  // session
   // const [loading, setLoading] = useState<boolean>(true)
   // const [index, setIndex] = useState<string>('')
   // const [enemyIndex, setEnemyIndex] = useState<string>('')
@@ -29,8 +29,7 @@ const Result: VFC = () => {
   // //   sessionStorage.getItem('enemyIndex')
   // )
 
-  const [text] = useAtom(textAtom)
-  const [enemyText] = useAtom(enemyTextAtom)
+  // jotai
   const [index] = useAtom(indextAtom)
   const [enemyIndex] = useAtom(enemyIndextAtom)
   const [words] = useAtom(wordsAtom)
@@ -38,43 +37,27 @@ const Result: VFC = () => {
 
   const [wordsArray] = useAtom(wordsArrayAtom)
   const [enemyWordsArray] = useAtom(enemyWordsArrayAtom)
+
+  // useRouter
+  const router = useRouter()
+
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px] text-xl'>
       <Link href='/'>
         <a>typing</a>
       </Link>
+
+      {/* jotai */}
       <div className='mt-10'>
+        <div className='mb-4 text-3xl font-bold'>jotai</div>
         <div className='flex gap-36'>
-          <div>{'myIndex: ' + index + text}</div>
-          <div>{'enemyIndex: ' + enemyIndex + enemyText}</div>
+          <div>{'myIndex: ' + index}</div>
+          <div>{'enemyIndex: ' + enemyIndex}</div>
         </div>
-        <div className='mt-10'>
-          {/* <ul>
-            {words.map((v, i) => (
-              <li key={i}>{v.value}</li>
-            ))}
-          </ul>
-          <ul>
-            {enemyWords.map((v, i) => (
-              <li key={i}>{v.value}</li>
-            ))}
-          </ul> */}
+        <div className='mt-4'>
           {words && enemyWords && (
             <>
-              {/* <div>{words[0].value}</div>
-              <div>{enemyWords[0].value}</div> */}
               <div className='flex gap-4'>
-                {/* <ul>
-                  {words.map((v, i) => (
-                    <li key={i}>{v.value}</li>
-                  ))}
-                </ul>
-                <ul>
-                  {enemyWords.map((v, i) => (
-                    <li key={i}>{v.value}</li>
-                  ))}
-                </ul> */}
-
                 <ul>
                   <li className='mb-2'>全ての単語</li>
                   {wordsArray.map((v, i) => (
@@ -104,6 +87,49 @@ const Result: VFC = () => {
               </div>
             </>
           )}
+        </div>
+      </div>
+
+      {/* useRouterからのデータ */}
+      <div className='mt-10'>
+        <div className='mb-4 text-3xl font-bold'>useRouter</div>
+        <div className='flex gap-36'>
+          <div>{'myIndex: ' + router.query.index}</div>
+          <div>{'enemyIndex: ' + router.query.enemyIndex}</div>
+        </div>
+        <div className='mt-4'>
+          <>
+            <div className='flex gap-4'>
+              <ul>
+                <li className='mb-2'>全ての単語</li>
+                {typeof router.query.wordsArray === 'object' &&
+                  router.query.wordsArray.map((v, i) => <li key={i}>{v}</li>)}
+              </ul>
+
+              <ul>
+                <li className='mb-2'>打った単語</li>
+                {typeof router.query.wordsArray === 'object' &&
+                  router.query.wordsArray.map((v, i) => (
+                    <li key={i}>{i < Number(router.query.index) && v}</li>
+                  ))}
+              </ul>
+              <ul>
+                <li className='mb-2'>敵の全ての単語</li>
+                {typeof router.query.enemyWordsArray === 'object' &&
+                  router.query.enemyWordsArray.map((v, i) => (
+                    <li key={i}>{v}</li>
+                  ))}
+              </ul>
+
+              <ul>
+                <li className='mb-2'>敵の打った単語</li>
+                {typeof router.query.enemyWordsArray === 'object' &&
+                  router.query.enemyWordsArray.map((v, i) => (
+                    <li key={i}>{i < Number(router.query.enemyIndex) && v}</li>
+                  ))}
+              </ul>
+            </div>
+          </>
         </div>
       </div>
     </div>

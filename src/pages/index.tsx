@@ -1,15 +1,14 @@
 import { useAtom } from 'jotai'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState, VFC } from 'react'
 import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
 import {
   enemyIndextAtom,
-  enemyTextAtom,
   enemyWordsArrayAtom,
   enemyWordsAtom,
   indextAtom,
-  textAtom,
   wordsArrayAtom,
   wordsAtom,
 } from 'libs/Atom'
@@ -23,14 +22,12 @@ interface wordData {
 }
 
 const Home: VFC = () => {
-  // const [text, setText] = useState<string>('')
-  // const [enemyText, setEnemyText] = useState<string>('')
+  const [text, setText] = useState<string>('')
+  const [enemyText, setEnemyText] = useState<string>('')
   // const [index, setIndex] = useState<number>(0)
   // const [enemyIndex, setEnemyIndex] = useState<number>(0)
   // const [words, setWords] = useState<wordData[]>()
   // const [enemyWords, setEnemyWords] = useState<wordData[]>()
-  const [text, setText] = useAtom(textAtom)
-  const [enemyText, setEnemyText] = useAtom(enemyTextAtom)
   const [index, setIndex] = useAtom(indextAtom)
   const [enemyIndex, setEnemyIndex] = useAtom(enemyIndextAtom)
   const [words, setWords] = useAtom(wordsAtom)
@@ -49,6 +46,8 @@ const Home: VFC = () => {
 
   const displayWords = useMemo(() => shuffleArray(wordList), [])
   const displayEnemyWords = useMemo(() => shuffleArray(wordList), [])
+
+  const router = useRouter()
 
   const addWord = useCallback(
     (word: string, enemy: boolean) => {
@@ -81,14 +80,21 @@ const Home: VFC = () => {
       addEnemyWord(displayEnemyWords[count / 2], false)
     }
 
-    // 別ページにデータを送る方法
-    // useContext, Redux Toolkit, jotai
-    // session, react Router, post method?
     if (count >= PLAYING_TIME) {
-      // sessionStorage.setItem('index', String(index))
-      // sessionStorage.setItem('enemyIndex', String(enemyIndex))
-      // window.location.href = '/result'
-      window.location.replace('/result')
+      const wordsString: string = wordsArray.join()
+      const enemyWordsString: string = enemyWordsArray.join()
+      router.push({
+        pathname: `/result`, // 遷移先のページ
+        query: {
+          index: index,
+          enemyIndex: enemyIndex,
+          wordsArray: wordsArray,
+          enemyWordsArray: enemyWordsArray,
+          wordsString: wordsString,
+          enemyWordsString: enemyWordsString,
+        }, // useRouter().queryをそのまま渡せば良い
+        // query: { someParam: `value`, ...router.query }, // 他にも渡したいものがある場合
+      })
     }
     // addWord, addEnemyWordを入れると無限ループするため
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +129,8 @@ const Home: VFC = () => {
     }
 
     if (words[index] && text === words[index].value) {
+      console.log(wordsArray)
+      console.log(enemyWordsArray)
       setText('')
       // 相手から送られた単語出ないなら、相手に送る
       if (words[index].enemy == false) {
