@@ -5,7 +5,8 @@ export const useTimer = (endSecond: number) => {
   const [timer, setTimer] = useState(false)
 
   useEffect(() => {
-    if (count >= endSecond) {
+    console.log(count)
+    if (count === 0) {
       setTimer(false)
     }
     if (timer) {
