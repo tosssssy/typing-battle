@@ -3,22 +3,25 @@
 import {
   collection,
   addDoc,
-  DocumentData,
   onSnapshot,
   getDocs,
   query,
   orderBy,
+  updateDoc,
 } from 'firebase/firestore'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
-import Link from 'next/link'
+import { Word } from 'types/word'
 
 const ChatPage: NextPage = () => {
-  const [data, setData] = useState<DocumentData[]>()
-  const [formParams, setFormParams] =
-    useState<{ value: string; userName: string }>()
+  const [comments, setComments] = useState<Word[]>([])
+  const [formParams, setFormParams] = useState<{
+    value: string
+    userName: string
+  }>()
   const reference = useMemo(() => collection(db, 'rooms'), [])
 
   useEffect(() => {
@@ -30,7 +33,7 @@ const ChatPage: NextPage = () => {
 
   const postComments = useCallback(async () => {
     const querySnapshot = await getDocs(reference)
-    setData(querySnapshot.docs.map((doc) => doc.data()))
+    setComments(querySnapshot.docs.map((doc) => doc.data()))
   }, [reference])
   useEffect(() => {
     postComments()
@@ -38,22 +41,37 @@ const ChatPage: NextPage = () => {
 
   useEffect(() => {
     const q = query(reference, orderBy('createdAt', 'asc'))
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setData(querySnapshot.docs.map((doc) => doc.data()))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'modified') {
+          // なぜか同じものが2回取得されるため
+          if (
+            change.doc.data().value === comments[comments.length - 1]?.value
+          ) {
+            return
+          }
+          setComments([...comments, change.doc.data()])
+        }
+      })
     })
     return unsubscribe
-  }, [reference])
+  }, [comments, reference])
 
   const onSubmit = useCallback(async () => {
     if (!formParams || !formParams.userName || !formParams.value) {
       return
     }
+
+    const req: Word = {
+      value: formParams?.value || '',
+      userName: formParams?.userName || '',
+      createdAt: String(new Date()),
+      type: 'obstacle',
+    }
+
     try {
-      const docRef = await addDoc(reference, {
-        value: formParams?.value || '',
-        userName: formParams?.userName || '',
-        createdAt: new Date(),
-      })
+      const docRef = await addDoc(reference, req)
+      await updateDoc(docRef, { id: docRef.id })
       console.log('Document written with ID: ', docRef.id)
       setFormParams({
         ...formParams,
@@ -64,7 +82,14 @@ const ChatPage: NextPage = () => {
     }
   }, [formParams, reference])
 
-  const { start } = useWordSendingBot(reference, 'toshiki', 60)
+  const { botStart } = useWordSendingBot(reference, 'toshiki', 60)
+
+  //デバッグ用
+  useEffect(() => {
+    comments?.forEach((comment) => {
+      console.log(`${comment.userName} -> "${comment.value}`)
+    })
+  }, [comments])
 
   return (
     <>
@@ -72,8 +97,8 @@ const ChatPage: NextPage = () => {
         <Link href='/'>typing</Link>
       </header>
       <div className='mx-8 mb-60'>
-        {data &&
-          data.map((field, index) => {
+        {comments &&
+          comments.map((field, index) => {
             return (
               <div key={index} className='my-3'>
                 <div>{field.userName || 'unknown'}</div>
