@@ -1,6 +1,6 @@
 import { collection } from 'firebase/firestore'
 import Link from 'next/link'
-import React, { useMemo, useState, VFC } from 'react'
+import React, { useMemo, VFC } from 'react'
 import { TypingField } from 'components/TypingField'
 import { useTimer } from 'hooks/useTimer'
 import { useTypingBattle } from 'hooks/useTypingBattle'
@@ -11,7 +11,6 @@ const PLAYING_TIME = 60
 const Home: VFC = () => {
   const reference = useMemo(() => collection(db, 'rooms'), [])
   const { count, startTimer } = useTimer(PLAYING_TIME)
-  const [isPlaying, setIsPlaying] = useState(false)
   const { enemyName, displayWords, displayEnemyWords } = useTypingBattle(
     reference,
     'toshiki'
@@ -22,7 +21,7 @@ const Home: VFC = () => {
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px]'>
       <header className='flex justify-between'>
-        <div className='font-serif text-3xl'>{'Timer : ' + (60 - count)}</div>
+        <div className='font-serif text-3xl'>{`Timer : ${count}`}</div>
         <Link href='/chat'>chat</Link>
       </header>
 
@@ -32,14 +31,14 @@ const Home: VFC = () => {
             <>
               <TypingField
                 words={displayWords}
-                disabled={count === PLAYING_TIME}
+                disabled={!count}
                 onCorrect={() => {
                   console.log('correct!')
                 }}
               />
               <TypingField
                 words={displayEnemyWords}
-                disabled={count === PLAYING_TIME}
+                disabled={!count}
                 onCorrect={() => {
                   console.log('correct!')
                 }}

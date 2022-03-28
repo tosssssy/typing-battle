@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 export const useTimer = (endSecond: number) => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(endSecond)
   const [timer, setTimer] = useState(false)
 
   useEffect(() => {
@@ -9,7 +9,7 @@ export const useTimer = (endSecond: number) => {
       setTimer(false)
     }
     if (timer) {
-      const timerId = setInterval(() => setCount((count) => count + 1), 1000)
+      const timerId = setInterval(() => setCount((count) => count - 1), 1000)
       return () => clearInterval(timerId)
     }
   }, [timer, count, endSecond])
