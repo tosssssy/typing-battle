@@ -47,20 +47,14 @@ const Result: VFC = () => {
   // const object = router.query.words
   console.log(router.query.words)
   const json = router.query.words
-  console.log(typeof json)
-  // console.log(JSON.parse(router.query.words))
-
+  console.log(JSON.parse(String(json)))
+  const words = JSON.parse(String(json))
+  // console.log(JSON.parse(String(router.query.words) || ''))
   const myObj = [
-    {
-      name: 'Skip',
-      age: 2,
-      favoriteFood: 'Steak',
-    },
-    {
-      name: 'Akio',
-      age: 20,
-      favoriteFood: 'ticken',
-    },
+    { value: 'start', enemy: true },
+    { value: 'undertake', enemy: false },
+    { value: 'urge', enemy: true },
+    { value: 'trickle', enemy: false },
   ]
   const myObjStr = JSON.stringify(myObj)
   console.log('myObj -> ')
@@ -69,23 +63,7 @@ const Result: VFC = () => {
   console.log(myObjStr)
   console.log(JSON.parse(myObjStr))
 
-  const myObject =
-    "[{ name: 'Skip', age: 2, favoriteFood: 'Steak' },{ name: 'Akio', age: 20, favoriteFood: 'ticken' },]"
-
-  const wordsObject = [
-    { value: 'start', enemy: true },
-    { value: 'undertake', enemy: false },
-    { value: 'urge', enemy: true },
-    { value: 'trickle', enemy: false },
-    { value: 'twist', enemy: false },
-    { value: 'tyranny', enemy: false },
-    { value: 'twofold', enemy: false },
-    { value: 'unbridled', enemy: false },
-    { value: 'turn up', enemy: false },
-    { value: 'tuition', enemy: false },
-  ]
-
-  console.log(JSON.parse(myObject))
+  // console.log(JSON.parse(myObject))
 
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px] text-xl'>
@@ -151,11 +129,15 @@ const Result: VFC = () => {
                 {typeof router.query.wordsArray === 'object' &&
                   router.query.wordsArray.map((v, i) => <li key={i}>{v}</li>)}
                 <br></br>
-                {/* {JSON.parse(router.query.words).map((v, i) => (
-                  <li key={i}>{v.value}</li>
-                ))} */}
+                {words.map((v, i) => (
+                  <li key={i}>{v}</li>
+                ))}
                 {/* {JSON.parse(router.query.words)} */}
+
                 {router.query.words}
+                <br></br>
+                <br></br>
+                {myObjStr}
               </ul>
 
               <ul>

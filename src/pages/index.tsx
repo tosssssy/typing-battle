@@ -81,8 +81,11 @@ const Home: VFC = () => {
     }
 
     if (count >= PLAYING_TIME) {
-      const wordsJson = JSON.stringify(words)
-      const enemyWordsJson = JSON.stringify(enemyWords)
+      const wordsJson: string = JSON.stringify(words).replace(/null,/, '')
+      const enemyWordsJson: string = JSON.stringify(enemyWords).replace(
+        'null,',
+        ''
+      )
       // console.log('words: -> ')
       // console.log(words)
       // console.log('JSON: -> ')
