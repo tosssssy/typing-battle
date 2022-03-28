@@ -1,15 +1,7 @@
-import { useAtom } from 'jotai'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { VFC } from 'react'
-import {
-  enemyIndextAtom,
-  enemyWordsArrayAtom,
-  enemyWordsAtom,
-  indextAtom,
-  wordsArrayAtom,
-  wordsAtom,
-} from 'libs/Atom'
+
 const Result: VFC = () => {
   // session
   // const [loading, setLoading] = useState<boolean>(true)
@@ -30,16 +22,70 @@ const Result: VFC = () => {
   // )
 
   // jotai
-  const [index] = useAtom(indextAtom)
-  const [enemyIndex] = useAtom(enemyIndextAtom)
-  const [words] = useAtom(wordsAtom)
-  const [enemyWords] = useAtom(enemyWordsAtom)
+  // const [index] = useAtom(indextAtom)
+  // const [enemyIndex] = useAtom(enemyIndextAtom)
+  // const [words] = useAtom(wordsAtom)
+  // const [enemyWords] = useAtom(enemyWordsAtom)
 
-  const [wordsArray] = useAtom(wordsArrayAtom)
-  const [enemyWordsArray] = useAtom(enemyWordsArrayAtom)
+  // const [wordsArray] = useAtom(wordsArrayAtom)
+  // const [enemyWordsArray] = useAtom(enemyWordsArrayAtom)
 
   // useRouter
   const router = useRouter()
+  // const words = useMemo(() => {
+  //   if (!router.query.words) {
+  //     return []
+  //   }
+  //   return JSON.parse(router.query.words![0])
+  // }, [])
+
+  // const words = router.query.words || ''
+
+  // console.log(JSON.parse(words))
+
+  // JSON.parse(router.query.words?[0])
+  // const object = router.query.words
+  console.log(router.query.words)
+  const json = router.query.words
+  console.log(typeof json)
+  // console.log(JSON.parse(router.query.words))
+
+  const myObj = [
+    {
+      name: 'Skip',
+      age: 2,
+      favoriteFood: 'Steak',
+    },
+    {
+      name: 'Akio',
+      age: 20,
+      favoriteFood: 'ticken',
+    },
+  ]
+  const myObjStr = JSON.stringify(myObj)
+  console.log('myObj -> ')
+  console.log(myObj)
+  console.log('JSON -> ')
+  console.log(myObjStr)
+  console.log(JSON.parse(myObjStr))
+
+  const myObject =
+    "[{ name: 'Skip', age: 2, favoriteFood: 'Steak' },{ name: 'Akio', age: 20, favoriteFood: 'ticken' },]"
+
+  const wordsObject = [
+    { value: 'start', enemy: true },
+    { value: 'undertake', enemy: false },
+    { value: 'urge', enemy: true },
+    { value: 'trickle', enemy: false },
+    { value: 'twist', enemy: false },
+    { value: 'tyranny', enemy: false },
+    { value: 'twofold', enemy: false },
+    { value: 'unbridled', enemy: false },
+    { value: 'turn up', enemy: false },
+    { value: 'tuition', enemy: false },
+  ]
+
+  console.log(JSON.parse(myObject))
 
   return (
     <div className='mx-auto mt-4 w-[90%] max-w-[800px] text-xl'>
@@ -48,7 +94,7 @@ const Result: VFC = () => {
       </Link>
 
       {/* jotai */}
-      <div className='mt-10'>
+      {/* <div className='mt-10'>
         <div className='mb-4 text-3xl font-bold'>jotai</div>
         <div className='flex gap-36'>
           <div>{'myIndex: ' + index}</div>
@@ -88,7 +134,7 @@ const Result: VFC = () => {
             </>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* useRouterからのデータ */}
       <div className='mt-10'>
@@ -104,6 +150,12 @@ const Result: VFC = () => {
                 <li className='mb-2'>全ての単語</li>
                 {typeof router.query.wordsArray === 'object' &&
                   router.query.wordsArray.map((v, i) => <li key={i}>{v}</li>)}
+                <br></br>
+                {/* {JSON.parse(router.query.words).map((v, i) => (
+                  <li key={i}>{v.value}</li>
+                ))} */}
+                {/* {JSON.parse(router.query.words)} */}
+                {router.query.words}
               </ul>
 
               <ul>

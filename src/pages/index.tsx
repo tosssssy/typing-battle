@@ -81,19 +81,23 @@ const Home: VFC = () => {
     }
 
     if (count >= PLAYING_TIME) {
-      const wordsString: string = wordsArray.join()
-      const enemyWordsString: string = enemyWordsArray.join()
+      const wordsJson = JSON.stringify(words)
+      const enemyWordsJson = JSON.stringify(enemyWords)
+      // console.log('words: -> ')
+      // console.log(words)
+      // console.log('JSON: -> ')
+      // console.log(wordsJson)
+
       router.push({
-        pathname: `/result`, // 遷移先のページ
+        pathname: `/result`,
         query: {
           index: index,
           enemyIndex: enemyIndex,
           wordsArray: wordsArray,
           enemyWordsArray: enemyWordsArray,
-          wordsString: wordsString,
-          enemyWordsString: enemyWordsString,
-        }, // useRouter().queryをそのまま渡せば良い
-        // query: { someParam: `value`, ...router.query }, // 他にも渡したいものがある場合
+          words: wordsJson,
+          enemyWords: enemyWordsJson,
+        },
       })
     }
     // addWord, addEnemyWordを入れると無限ループするため
@@ -129,8 +133,6 @@ const Home: VFC = () => {
     }
 
     if (words[index] && text === words[index].value) {
-      console.log(wordsArray)
-      console.log(enemyWordsArray)
       setText('')
       // 相手から送られた単語出ないなら、相手に送る
       if (words[index].enemy == false) {
