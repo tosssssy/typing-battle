@@ -21,12 +21,11 @@ export const useWordSendingBot = (
       const word: Word = {
         userName: userName,
         value: String(count),
-        createdAt: String(new Date()),
+        createdAt: new Date(),
         type: 'bot',
       }
       const docRef = await addDoc(reference, word)
       await updateDoc(docRef, { id: docRef.id })
-      console.log('send', count)
     } catch (e) {
       console.error('Error adding document: ', e)
     }

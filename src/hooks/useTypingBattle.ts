@@ -20,7 +20,8 @@ export const useTypingBattle = (
 
   // firestoreからのデータ取得（初回）
   const getAllWordsFromFirestore = useCallback(async () => {
-    const querySnapshot = await getDocs(reference)
+    const q = query(reference, orderBy('createdAt', 'desc'))
+    const querySnapshot = await getDocs(q)
     // 敵の名前を登録
     if (!enemyName) {
       let isRegisteredEnemyName = false
@@ -60,25 +61,31 @@ export const useTypingBattle = (
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         const newWord = change.doc.data() as Word
-        if (
-          // なぜか同じものが2回取得されるため
-          !allWords.length ||
-          (newWord.value !== allWords[allWords.length - 1].value &&
-            change.type === 'modified')
-        ) {
-          // 敵の名前を登録
-          if (!enemyName && newWord.userName && newWord.userName !== userName) {
-            setEnemyName(newWord.userName)
-            console.log('enemy name: ', newWord.userName)
-          }
+        if (change.type === 'modified') {
+          console.log(newWord)
+          if (
+            // なぜか同じものが2回取得されるため
+            !allWords.length ||
+            newWord.value !== allWords[allWords.length - 1].value
+          ) {
+            // 敵の名前を登録
+            if (
+              !enemyName &&
+              newWord.userName &&
+              newWord.userName !== userName
+            ) {
+              setEnemyName(newWord.userName)
+              console.log('enemy name: ', newWord.userName)
+            }
 
-          // 振り分け処理
-          setAllWords([...allWords, newWord])
-          if (isOwnerDisplayWord(userName, newWord)) {
-            setDisplayWords([...displayWords, newWord])
-          }
-          if (isOwnerDisplayWord(enemyName, newWord)) {
-            setDisplayEnemyWords([...displayEnemyWords, newWord])
+            // 振り分け処理
+            setAllWords([...allWords, newWord])
+            if (isOwnerDisplayWord(userName, newWord)) {
+              setDisplayWords([...displayWords, newWord])
+            }
+            if (isOwnerDisplayWord(enemyName, newWord)) {
+              setDisplayEnemyWords([...displayEnemyWords, newWord])
+            }
           }
         }
       })
@@ -93,7 +100,7 @@ export const useTypingBattle = (
     userName,
   ])
 
-  return { enemyName, displayWords, displayEnemyWords }
+  return { enemyName, displayWords, setDisplayWords, displayEnemyWords }
 }
 
 // owner側に表示されるコメントかを判定。以下の2通りある。

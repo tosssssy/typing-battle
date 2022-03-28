@@ -65,7 +65,7 @@ const ChatPage: NextPage = () => {
     const req: Word = {
       value: formParams?.value || '',
       userName: formParams?.userName || '',
-      createdAt: String(new Date()),
+      createdAt: new Date(),
       type: 'obstacle',
     }
 
