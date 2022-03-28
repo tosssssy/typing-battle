@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useTimer = (endSecond: number) => {
   const [count, setCount] = useState(0)
@@ -14,8 +14,9 @@ export const useTimer = (endSecond: number) => {
     }
   }, [timer, count, endSecond])
 
+  const startTimer = useCallback(() => setTimer(true), [])
   return {
-    setTimer,
     count,
+    startTimer,
   }
 }
