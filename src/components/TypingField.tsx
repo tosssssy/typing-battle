@@ -19,7 +19,7 @@ export const TypingField: VFC<Props> = ({
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (words[0].value == e.target.value) {
+      if (words[0]?.value && words[0].value == e.target.value) {
         onCorrect()
         setText('')
       }

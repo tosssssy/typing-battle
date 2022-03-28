@@ -59,14 +59,14 @@ export const useTypingBattle = (
     const q = query(reference, orderBy('createdAt', 'asc'))
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === 'modified') {
-          const newWord = change.doc.data() as Word
-
+        const newWord = change.doc.data() as Word
+        if (
           // なぜか同じものが2回取得されるため
-          if (newWord.value === allWords[allWords.length - 1].value) {
-            return
-          }
-          // 敵の名前を登録（動作未確認）
+          !allWords.length ||
+          (newWord.value !== allWords[allWords.length - 1].value &&
+            change.type === 'modified')
+        ) {
+          // 敵の名前を登録
           if (!enemyName && newWord.userName && newWord.userName !== userName) {
             setEnemyName(newWord.userName)
             console.log('enemy name: ', newWord.userName)
