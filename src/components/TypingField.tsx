@@ -7,7 +7,7 @@ type Props = {
   words: Word[]
   disabled?: boolean
   onCorrect: (word: Word) => void
-  myTextField: boolean
+  textInputHidden: boolean
 }
 
 export const TypingField: VFC<Props> = ({
@@ -15,7 +15,7 @@ export const TypingField: VFC<Props> = ({
   words,
   disabled = false,
   onCorrect,
-  myTextField,
+  textInputHidden,
 }) => {
   const [text, setText] = useState('')
 
@@ -42,10 +42,10 @@ export const TypingField: VFC<Props> = ({
         {words.map((word, i) => (
           <li
             key={i}
-            className={`${
-              word.userName != 'bot' &&
-              'underline underline-offset-2 text-emerald-600 animate-pulse'
-            }`}
+            className={clsx(
+              word.type === 'obstacle' &&
+                'text-emerald-600 underline underline-offset-2 animate-pulse'
+            )}
           >
             {i > 0 && i < 10 && word.value}
           </li>
@@ -56,9 +56,10 @@ export const TypingField: VFC<Props> = ({
       <div className='text-center'>
         {words[0]?.value && (
           <div
-            className={`h-[40px] text-3xl ${
-              words[0].userName != 'bot' && 'underline underline-offset-2'
-            }`}
+            className={clsx(
+              'h-[40px] text-3xl',
+              words[0].type === 'obstacle' && 'underline underline-offset-2'
+            )}
           >
             {words[0].value.split('').map((word, i) => (
               <span
@@ -67,7 +68,7 @@ export const TypingField: VFC<Props> = ({
                   text.length > i &&
                     words[0].value?.split('')[i] !== text.split('')[i] &&
                     'text-red-500',
-                  words[0].userName != 'bot' &&
+                  words[0].type === 'obstacle' &&
                     'text-emerald-600 underline underline-offset-2'
                 )}
               >
@@ -77,7 +78,7 @@ export const TypingField: VFC<Props> = ({
           </div>
         )}
 
-        {myTextField && (
+        {textInputHidden && (
           <input
             type='text'
             className='my-2 text-xl border-2 border-black'
