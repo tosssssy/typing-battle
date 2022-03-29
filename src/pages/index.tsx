@@ -6,15 +6,13 @@ import { wordList } from 'dev/wordList'
 import { useTimer } from 'hooks/useTimer'
 import {
   enemyIndextAtom,
-  enemyWordsArrayAtom,
   enemyWordsAtom,
   indextAtom,
-  wordsArrayAtom,
   wordsAtom,
 } from 'libs/Atom'
 import { shuffleArray } from 'utils/shuffleArray'
 
-const PLAYING_TIME = 20
+const PLAYING_TIME = 60
 
 interface wordData {
   value: string
@@ -24,17 +22,10 @@ interface wordData {
 const Home: VFC = () => {
   const [text, setText] = useState<string>('')
   const [enemyText, setEnemyText] = useState<string>('')
-  // const [index, setIndex] = useState<number>(0)
-  // const [enemyIndex, setEnemyIndex] = useState<number>(0)
-  // const [words, setWords] = useState<wordData[]>()
-  // const [enemyWords, setEnemyWords] = useState<wordData[]>()
   const [index, setIndex] = useAtom(indextAtom)
   const [enemyIndex, setEnemyIndex] = useAtom(enemyIndextAtom)
   const [words, setWords] = useAtom(wordsAtom)
   const [enemyWords, setEnemyWords] = useAtom(enemyWordsAtom)
-
-  const [wordsArray, setWordsArray] = useAtom(wordsArrayAtom)
-  const [enemyWordsArray, setEnemyWordsArray] = useAtom(enemyWordsArrayAtom)
 
   useEffect(() => {
     setWords([{ value: 'start', enemy: false }])
@@ -54,10 +45,6 @@ const Home: VFC = () => {
       if (!words) return
       const newWords = [...words, { value: word, enemy: enemy }]
       setWords(newWords)
-
-      const newWordsArray = [...wordsArray, word]
-      setWordsArray(newWordsArray)
-      console.log('add!!!')
     },
     [words]
   )
@@ -66,9 +53,6 @@ const Home: VFC = () => {
       if (!enemyWords) return
       const newWords = [...enemyWords, { value: word, enemy: enemy }]
       setEnemyWords(newWords)
-
-      const newWordsArray = [...enemyWordsArray, word]
-      setEnemyWordsArray(newWordsArray)
     },
     [enemyWords]
   )
@@ -81,26 +65,8 @@ const Home: VFC = () => {
     }
 
     if (count >= PLAYING_TIME) {
-      const wordsJson: string = JSON.stringify(words).replace(/null,/, '')
-      const enemyWordsJson: string = JSON.stringify(enemyWords).replace(
-        'null,',
-        ''
-      )
-      // console.log('words: -> ')
-      // console.log(words)
-      // console.log('JSON: -> ')
-      // console.log(wordsJson)
-
       router.push({
         pathname: `/result`,
-        query: {
-          index: index,
-          enemyIndex: enemyIndex,
-          wordsArray: wordsArray,
-          enemyWordsArray: enemyWordsArray,
-          words: wordsJson,
-          enemyWords: enemyWordsJson,
-        },
       })
     }
     // addWord, addEnemyWordを入れると無限ループするため
