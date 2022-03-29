@@ -7,6 +7,7 @@ type Props = {
   words: Word[]
   disabled?: boolean
   onCorrect: (word: Word) => void
+  myTextField: boolean
 }
 
 export const TypingField: VFC<Props> = ({
@@ -14,6 +15,7 @@ export const TypingField: VFC<Props> = ({
   words,
   disabled = false,
   onCorrect,
+  myTextField,
 }) => {
   const [text, setText] = useState('')
 
@@ -38,36 +40,53 @@ export const TypingField: VFC<Props> = ({
     >
       <ul className='flex flex-col-reverse h-[250px]'>
         {words.map((word, i) => (
-          <li key={i}>{i > 0 && word.value}</li>
+          <li
+            key={i}
+            className={`${
+              word.userName != 'bot' &&
+              'underline underline-offset-2 text-emerald-600 animate-pulse'
+            }`}
+          >
+            {i > 0 && i < 10 && word.value}
+          </li>
         ))}
       </ul>
 
       {/* 入力する単語 */}
       <div className='text-center'>
-        <div className='h-[40px] text-3xl'>
-          {words[0]?.value &&
-            words[0].value.split('').map((v, i) => (
+        {words[0]?.value && (
+          <div
+            className={`h-[40px] text-3xl ${
+              words[0].userName != 'bot' && 'underline underline-offset-2'
+            }`}
+          >
+            {words[0].value.split('').map((word, i) => (
               <span
                 key={i}
                 className={clsx(
                   text.length > i &&
                     words[0].value?.split('')[i] !== text.split('')[i] &&
-                    'text-red-500'
+                    'text-red-500',
+                  words[0].userName != 'bot' &&
+                    'text-emerald-600 underline underline-offset-2'
                 )}
               >
-                {v}
+                {word}
               </span>
             ))}
-        </div>
+          </div>
+        )}
 
-        <input
-          type='text'
-          className='my-2 text-xl border-2 border-black'
-          autoFocus
-          value={text}
-          onChange={onChange}
-          disabled={disabled}
-        />
+        {myTextField && (
+          <input
+            type='text'
+            className='my-2 text-xl border-2 border-black'
+            autoFocus
+            value={text}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )}
       </div>
       {/* <div className='font-serif text-[50px] text-center'>
           <div>{index}</div>

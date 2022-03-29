@@ -66,6 +66,7 @@ const Home: VFC = () => {
                 words={displayWords}
                 disabled={!count}
                 onCorrect={onCorrect}
+                myTextField={true}
               />
               <TypingField
                 words={displayEnemyWords}
@@ -73,6 +74,7 @@ const Home: VFC = () => {
                 onCorrect={() => {
                   console.log('correct!')
                 }}
+                myTextField={false}
               />
             </>
           )}
