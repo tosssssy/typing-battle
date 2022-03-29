@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, VFC } from 'react'
 import { TypingField } from 'components/TypingField'
 import { useTimer } from 'hooks/useTimer'
 import { useTypingBattle } from 'hooks/useTypingBattle'
+import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
 import { Word } from 'types/word'
 
@@ -16,14 +17,16 @@ const Home: VFC = () => {
   const { enemyName, displayWords, setDisplayWords, displayEnemyWords } =
     useTypingBattle(reference, userName)
 
-  // const { botStart } = useWordSendingBot(reference, userName, PLAYING_TIME)
-  // useEffect(() => botStart(), [botStart])
+  const { botStart } = useWordSendingBot(reference, enemyName, PLAYING_TIME)
 
   const onCorrect = useCallback(
     async (word: Word) => {
       if (!word.id) {
         return
       }
+      // mutate処理
+      setDisplayWords(displayWords.filter((v) => v.id !== word.id))
+
       // 相手のbotから送られてきた場合は送り返す
       if (word.type === 'bot') {
         try {
@@ -45,8 +48,6 @@ const Home: VFC = () => {
           console.error('Error adding document: ', e)
         }
       }
-      // mutate処理
-      setDisplayWords(displayWords.filter((v) => v.id !== word.id))
     },
     [displayWords, setDisplayWords]
   )
@@ -84,6 +85,7 @@ const Home: VFC = () => {
             </>
           )}
         </div>
+        <button onClick={botStart}>すたーと</button>
       </main>
     </div>
   )

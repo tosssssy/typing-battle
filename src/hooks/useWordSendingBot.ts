@@ -7,11 +7,12 @@ import {
 import { useCallback, useEffect } from 'react'
 import { useTimer } from './useTimer'
 import { Word } from 'types/word'
+import { getRandomWord } from 'utils/getRandomWord'
 
-//一定間隔に一度敵に単語を送るbot
+//一定間隔に一度自分に単語を送るbot
 export const useWordSendingBot = (
   reference: CollectionReference<DocumentData>,
-  userName: string,
+  enemyName: string,
   playingTime: number
 ) => {
   const { count, startTimer } = useTimer(playingTime)
@@ -19,8 +20,8 @@ export const useWordSendingBot = (
   const sendRandomWord = useCallback(async () => {
     try {
       const word: Word = {
-        userName: userName,
-        value: String(count),
+        userName: enemyName,
+        value: getRandomWord(),
         createdAt: new Date(),
         type: 'bot',
       }
@@ -29,13 +30,13 @@ export const useWordSendingBot = (
     } catch (e) {
       console.error('Error adding document: ', e)
     }
-  }, [count, reference, userName])
+  }, [reference, enemyName])
 
   useEffect(() => {
     if (count > 0 && count < playingTime && count % 3 === 0) {
       sendRandomWord()
     }
-  }, [count, sendRandomWord, playingTime, userName])
+  }, [count, sendRandomWord, playingTime, enemyName])
 
   return {
     botStart: startTimer,

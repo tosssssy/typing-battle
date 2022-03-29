@@ -24,10 +24,10 @@ export const useTypingBattle = (
     const querySnapshot = await getDocs(q)
     // 敵の名前を登録
     if (!enemyName) {
-      let isRegisteredEnemyName = false
+      let isRegistered = false
       querySnapshot.forEach((doc) => {
-        if (!isRegisteredEnemyName && doc.data().userName !== userName) {
-          isRegisteredEnemyName = true
+        if (!isRegistered && doc.data().userName !== userName) {
+          isRegistered = true
           setEnemyName(doc.data().userName)
           console.log('enemy name: ', doc.data().userName)
         }
