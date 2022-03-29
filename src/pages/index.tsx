@@ -55,7 +55,14 @@ const Home: VFC = () => {
     <div className='mx-auto mt-4 w-[90%] max-w-[800px]'>
       <header className='flex justify-between'>
         <div className='font-serif text-3xl'>{`Timer : ${count}`}</div>
-        <Link href='/chat'>chat</Link>
+        <div className='flex gap-4'>
+          <Link href='/chat'>
+            <a>chat</a>
+          </Link>
+          <Link href='/result'>
+            <a>result</a>
+          </Link>
+        </div>
       </header>
 
       <main>
