@@ -16,7 +16,7 @@ const Home: VFC = () => {
   const { enemyName, displayWords, setDisplayWords, displayEnemyWords } =
     useTypingBattle(reference, userName)
 
-  // const { botStart } = useWordSendingBot(reference, userName, PLAYING_TIME)
+  // const { botStart } = useWordSendingBot(reference, enemyName, PLAYING_TIME)
   // useEffect(() => botStart(), [botStart])
 
   const onCorrect = useCallback(
@@ -24,6 +24,9 @@ const Home: VFC = () => {
       if (!word.id) {
         return
       }
+      // mutate処理
+      setDisplayWords(displayWords.filter((v) => v.id !== word.id))
+
       // 相手のbotから送られてきた場合は送り返す
       if (word.type === 'bot') {
         try {
@@ -45,8 +48,6 @@ const Home: VFC = () => {
           console.error('Error adding document: ', e)
         }
       }
-      // mutate処理
-      setDisplayWords(displayWords.filter((v) => v.id !== word.id))
     },
     [displayWords, setDisplayWords]
   )
