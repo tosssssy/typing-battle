@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect } from 'react'
 import { useTimer } from './useTimer'
 import { Word } from 'types/word'
+import { getRandomWord } from 'utils/getRandomWord'
 
 //一定間隔に一度自分に単語を送るbot
 export const useWordSendingBot = (
@@ -20,7 +21,7 @@ export const useWordSendingBot = (
     try {
       const word: Word = {
         userName: enemyName,
-        value: String(count),
+        value: getRandomWord(),
         createdAt: new Date(),
         type: 'bot',
       }
@@ -29,7 +30,7 @@ export const useWordSendingBot = (
     } catch (e) {
       console.error('Error adding document: ', e)
     }
-  }, [count, reference, enemyName])
+  }, [reference, enemyName])
 
   useEffect(() => {
     if (count > 0 && count < playingTime && count % 3 === 0) {

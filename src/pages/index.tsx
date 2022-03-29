@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, VFC } from 'react'
 import { TypingField } from 'components/TypingField'
 import { useTimer } from 'hooks/useTimer'
 import { useTypingBattle } from 'hooks/useTypingBattle'
+import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
 import { Word } from 'types/word'
 
@@ -16,8 +17,7 @@ const Home: VFC = () => {
   const { enemyName, displayWords, setDisplayWords, displayEnemyWords } =
     useTypingBattle(reference, userName)
 
-  // const { botStart } = useWordSendingBot(reference, enemyName, PLAYING_TIME)
-  // useEffect(() => botStart(), [botStart])
+  const { botStart } = useWordSendingBot(reference, enemyName, PLAYING_TIME)
 
   const onCorrect = useCallback(
     async (word: Word) => {
@@ -78,6 +78,7 @@ const Home: VFC = () => {
             </>
           )}
         </div>
+        <button onClick={botStart}>すたーと</button>
       </main>
     </div>
   )
