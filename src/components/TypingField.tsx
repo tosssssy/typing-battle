@@ -7,7 +7,7 @@ type Props = {
   words: Word[]
   disabled?: boolean
   onCorrect: (word: Word) => void
-  textInputHidden: boolean
+  textInputHidden?: boolean
 }
 
 export const TypingField: VFC<Props> = ({
@@ -15,7 +15,7 @@ export const TypingField: VFC<Props> = ({
   words,
   disabled = false,
   onCorrect,
-  textInputHidden,
+  textInputHidden = false,
 }) => {
   const [text, setText] = useState('')
 
