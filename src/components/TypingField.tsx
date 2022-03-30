@@ -78,7 +78,7 @@ export const TypingField: VFC<Props> = ({
           </div>
         )}
 
-        {textInputHidden && (
+        {!textInputHidden && (
           <input
             type='text'
             className='my-2 text-xl border-2 border-black'

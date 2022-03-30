@@ -66,13 +66,13 @@ const Home: VFC = () => {
                 words={displayWords}
                 disabled={!count}
                 onCorrect={onCorrect}
-                textInputHidden
               />
               <TypingField
                 words={displayEnemyWords}
                 onCorrect={() => {
                   console.log('correct!')
                 }}
+                textInputHidden
               />
             </>
           )}
