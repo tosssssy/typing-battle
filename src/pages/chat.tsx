@@ -103,7 +103,7 @@ const ChatPage: NextPage = () => {
               <div key={index} className='my-3'>
                 <div>{field.userName || 'unknown'}</div>
                 <div className='p-2 text-white bg-green-300 rounded-md'>
-                  {field.value || '　'}
+                  {`value=${field.value}, type=${field.type}` || '　'}
                 </div>
               </div>
             )

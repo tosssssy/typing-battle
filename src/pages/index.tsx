@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { addDoc, collection, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import React, { useCallback, useMemo, VFC } from 'react'
 import { TypingField } from 'components/TypingField'
@@ -8,7 +8,7 @@ import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
 import { Word } from 'types/word'
 
-const PLAYING_TIME = 60
+const PLAYING_TIME = 20
 
 const Home: VFC = () => {
   const reference = useMemo(() => collection(db, 'rooms'), [])
@@ -25,17 +25,19 @@ const Home: VFC = () => {
         return
       }
       // mutate処理
-      setDisplayWords(displayWords.filter((v) => v.id !== word.id))
+      setDisplayWords(displayWords.filter((el) => el.id !== word.id))
 
-      // 相手のbotから送られてきた場合は送り返す
+      // botから送られてきた場合は送り返す
       if (word.type === 'bot') {
         try {
-          await updateDoc(doc(db, 'rooms', word.id), {
+          const docRef = await addDoc(reference, {
             id: word.id,
             userName,
+            value: word.value,
             createdAt: new Date(),
             type: 'obstacle',
           })
+          await updateDoc(docRef, { id: docRef.id })
         } catch (e) {
           console.error('Error adding document: ', e)
         }
@@ -43,13 +45,20 @@ const Home: VFC = () => {
       // 相手から送られてきた場合は消す
       if (word.type === 'obstacle') {
         try {
-          await deleteDoc(doc(db, 'rooms', word.id))
+          const docRef = await addDoc(collection(db, 'rooms'), {
+            id: word.id,
+            userName,
+            value: word.value,
+            createdAt: new Date(),
+            type: 'deleted',
+          })
+          await updateDoc(docRef, { id: docRef.id })
         } catch (e) {
           console.error('Error adding document: ', e)
         }
       }
     },
-    [displayWords, setDisplayWords]
+    [displayWords, reference, setDisplayWords]
   )
 
   return (

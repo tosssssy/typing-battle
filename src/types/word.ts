@@ -3,5 +3,5 @@ export type Word = {
   userName?: string
   value?: string
   createdAt?: Date
-  type?: 'command' | 'bot' | 'obstacle'
+  type?: 'command' | 'bot' | 'obstacle' | 'deleted'
 }
