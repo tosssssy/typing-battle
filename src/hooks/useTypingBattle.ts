@@ -13,7 +13,7 @@ export const useTypingBattle = (
   reference: CollectionReference<DocumentData>,
   userName: string
 ) => {
-  const [enemyName, setEnemyName] = useState<string>('')
+  const [enemyName, setEnemyName] = useState('')
   const [allWords, setAllWords] = useState<Word[]>([])
   const [displayWords, setDisplayWords] = useState<Word[]>([])
   const [displayEnemyWords, setDisplayEnemyWords] = useState<Word[]>([])
@@ -37,9 +37,10 @@ export const useTypingBattle = (
     // 振り分ける処理
     let displayWords: Word[] = []
     let displayEnemyWords: Word[] = []
+
     querySnapshot.forEach((doc) => {
       const newWord = doc.data() as Word
-      console.log(newWord.userName, '->', newWord.value)
+      // console.log(newWord.userName, '->', newWord.value)
       if (isOwnerDisplayWord(userName, newWord)) {
         displayWords = [...displayWords, newWord]
       }
@@ -47,6 +48,7 @@ export const useTypingBattle = (
         displayEnemyWords = [...displayEnemyWords, newWord]
       }
     })
+
     setAllWords(querySnapshot.docs.map((doc) => doc.data()))
     setDisplayWords(displayWords)
     setDisplayEnemyWords(displayEnemyWords)
@@ -66,7 +68,8 @@ export const useTypingBattle = (
           if (
             // なぜか同じものが2回取得されるため
             !allWords.length ||
-            newWord.value !== allWords[allWords.length - 1].value
+            newWord.value !== allWords[allWords.length - 1].value ||
+            newWord.type !== allWords[allWords.length - 1].type
           ) {
             // 敵の名前を登録
             if (
@@ -87,6 +90,13 @@ export const useTypingBattle = (
               setDisplayEnemyWords([...displayEnemyWords, newWord])
             }
           }
+
+          // 敵が単語を消すたびにmutate処理
+          if (newWord.userName === enemyName && newWord.type === 'deleted') {
+            setDisplayEnemyWords(
+              displayEnemyWords.filter((el) => newWord.value !== el.value)
+            )
+          }
         }
       })
     })
@@ -105,7 +115,7 @@ export const useTypingBattle = (
 
 // owner側に表示されるコメントかを判定。以下の2通りある。
 // 1. 敵から送られてきた単語
-// 2. 敵のbotから送られてきた単語
+// 2.　botから送られてきた単語
 const isOwnerDisplayWord = (ownerName: string, word: Word) => {
   if (word.type === 'obstacle' && word.userName !== ownerName) {
     return true
