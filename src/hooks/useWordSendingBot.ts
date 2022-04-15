@@ -1,9 +1,4 @@
-import {
-  addDoc,
-  CollectionReference,
-  DocumentData,
-  updateDoc,
-} from 'firebase/firestore'
+import { addDoc, CollectionReference, DocumentData } from 'firebase/firestore'
 import { useCallback, useEffect } from 'react'
 import { useTimer } from './useTimer'
 import { Word } from 'types/word'
@@ -25,8 +20,7 @@ export const useWordSendingBot = (
         createdAt: new Date(),
         type: 'bot',
       }
-      const docRef = await addDoc(reference, word)
-      await updateDoc(docRef, { id: docRef.id })
+      await addDoc(reference, word)
     } catch (e) {
       console.error('Error adding document: ', e)
     }

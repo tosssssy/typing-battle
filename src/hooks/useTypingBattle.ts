@@ -5,6 +5,7 @@ import {
   onSnapshot,
   CollectionReference,
   DocumentData,
+  where,
 } from 'firebase/firestore'
 import { useCallback, useEffect, useState } from 'react'
 import { Word } from 'types/word'
@@ -59,12 +60,16 @@ export const useTypingBattle = (
 
   // firestoreからのデータ取得（購読）
   useEffect(() => {
-    const q = query(reference, orderBy('createdAt', 'asc'))
+    const q = query(
+      reference,
+      where('createdAt', '>=', new Date()),
+      orderBy('createdAt', 'asc')
+    )
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        const newWord = change.doc.data() as Word
-        if (change.type === 'modified') {
-          console.log(newWord)
+        if (change.type === 'added') {
+          const newWord = change.doc.data() as Word
+          console.log('received', newWord.value)
           if (
             // なぜか同じものが2回取得されるため
             !allWords.length ||

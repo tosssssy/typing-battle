@@ -11,28 +11,32 @@ import {
 } from 'firebase/firestore'
 import { NextPage } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useWordSendingBot } from 'hooks/useWordSendingBot'
 import { db } from 'libs/firebase'
 import { Word } from 'types/word'
 
 const ChatPage: NextPage = () => {
+  const router = useRouter()
+  const userName = (router.query.name as string) || 'empty'
+  const room = (router.query.room as string) || 'empty'
   const [comments, setComments] = useState<Word[]>([])
   const [formParams, setFormParams] = useState<{
-    value: string
     userName: string
+    value: string
   }>()
-  const reference = useMemo(() => collection(db, 'rooms'), [])
+  const reference = useMemo(() => collection(db, room), [room])
 
   useEffect(() => {
     setFormParams({
-      userName: '',
+      userName,
       value: '',
     })
-  }, [])
+  }, [userName])
 
   const postComments = useCallback(async () => {
-    const querySnapshot = await getDocs(reference)
+    const q = query(reference, orderBy('createdAt', 'asc'))
+    const querySnapshot = await getDocs(q)
     setComments(querySnapshot.docs.map((doc) => doc.data()))
   }, [reference])
   useEffect(() => {
@@ -82,8 +86,6 @@ const ChatPage: NextPage = () => {
     }
   }, [formParams, reference])
 
-  const { botStart } = useWordSendingBot(reference, 'toshiki', 60)
-
   //デバッグ用
   useEffect(() => {
     comments?.forEach((comment) => {
@@ -94,7 +96,7 @@ const ChatPage: NextPage = () => {
   return (
     <>
       <header>
-        <Link href='/'>typing</Link>
+        <Link href={`/battle?name=${userName}&room=${room}`}>typing</Link>
       </header>
       <div className='mx-8 mb-60'>
         {comments &&

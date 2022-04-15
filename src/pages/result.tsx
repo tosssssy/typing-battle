@@ -10,7 +10,7 @@ import { Word } from 'types/word'
 //   wordsAtom,
 // } from 'libs/Atom'
 
-const Result: VFC = () => {
+const ResultPage: VFC = () => {
   const router = useRouter()
   // const [userName] = useAtom(userNameAtom)
   // const [enemyUserName] = useAtom(enemyUserNameAtom)
@@ -147,4 +147,4 @@ const Result: VFC = () => {
   )
 }
 
-export default Result
+export default ResultPage
